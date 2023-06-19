@@ -11,6 +11,11 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum VoteType {
+  UP
+  DOWN
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -28,7 +33,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@index([userId])
 }
 
 model Session {
@@ -37,17 +41,16 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
+  id                String         @id @default(cuid())
+  name              String?
+  email             String?        @unique
+  emailVerified     DateTime?
+  username          String?        @unique
 
-  image    String?
-  accounts Account[]
-  sessions Session[]
+  image       String?
+  accounts    Account[]
+  sessions    Session[]
 }
